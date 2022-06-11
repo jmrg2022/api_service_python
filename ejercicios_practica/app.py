@@ -33,7 +33,7 @@ persona.db.init_app(app)
 def index():
     try:
         # Imprimir los distintos endopoints disponibles
-        result = "<h1>Bienvenido!!</h1>"
+        result = "<h1>Bienvenido!! Jesús González</h1>"
         result += "<h2>Endpoints disponibles:</h2>"
         result += "<h2>Ejercicio Nº1:</h2>"
         result += "<h3>[GET] /personas?limit=[]&offset=[] --> mostrar el listado de personas (limite and offset are optional)</h3>"
@@ -59,9 +59,18 @@ def personas():
 
         # Debe verificar si el limit y offset son válidos cuando
         # no son especificados en la URL
+        
+        limit_str = str(request.args.get('limit'))
+        offset_str = str(request.args.get('offset'))
 
         limit = 0
         offset = 0
+
+        if(limit_str is not None) and (limit_str.isdigit()):
+            limit = int(limit_str)
+
+        if(offset_str is not None) and (offset_str.isdigit()):
+            offset = int(offset_str)
 
         result = persona.report(limit=limit, offset=offset)
         return jsonify(result)
@@ -81,9 +90,12 @@ def registro():
             # name = ...
             # age = ...
 
+            name = str(request.form.get('name'))
+            age = str(request.form.get('age'))
+
             # Alumno: descomentar la linea persona.insert una vez implementado
             # lo anterior:
-            # persona.insert(name, int(age))
+            persona.insert(name, int(age))
             return Response(status=200)
         except:
             return jsonify({'trace': traceback.format_exc()})
@@ -106,11 +118,11 @@ def comparativa():
 
         # Descomentar luego de haber implementado su función en persona.py:
 
-        # x, y = persona.dashboard()
-        # image_html = utils.graficar(x, y)
-        # return Response(image_html.getvalue(), mimetype='image/png')
+        x, y = persona.dashboard()
+        image_html = utils.graficar(x, y)
+        return Response(image_html.getvalue(), mimetype='image/png')
 
-        return "Alumno --> Realice la implementacion"
+        # return "Alumno --> Realice la implementacion"
     except:
         return jsonify({'trace': traceback.format_exc()})
 

@@ -12,6 +12,7 @@ Programa creado para administrar la base de datos de registro de personas
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
 
 class Persona(db.Model):
@@ -53,6 +54,23 @@ def report(limit=0, offset=0):
 
     return json_result_list
 
+def dashboard():
+
+    query = db.session.query(Persona)
+    
+    personas = []
+    ages = []
+
+    #personas = ["Jesus","Carlos","Maria"]
+    #ages = [43,50,67]
+    
+    for person in query:
+        per = {person.name}
+        personas.append(per)
+        ag = {person.age}
+        ages.append(ag)
+
+    return personas, ages
 
 if __name__ == "__main__":
     print("Test del modulo heart.py")
@@ -73,5 +91,10 @@ if __name__ == "__main__":
     # Aquí se puede ensayar todo lo que necesitemos con nuestra DB
     # ...
 
+    datos = report()
+    print(datos)
+    
+    #dashboard()
+        
     db.session.remove()
     db.drop_all()
